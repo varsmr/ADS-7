@@ -15,9 +15,9 @@ class Train {
 
  public:
   Train();
-  void addCarriage(bool light);
-  int getTotalLength();
-  int getOperationCount();
+  void addCar(bool light);
+  int getLength();
+  int getOpCount();
   ~Train();
 };
 
