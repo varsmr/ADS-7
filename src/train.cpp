@@ -1,38 +1,59 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
-#include <cstdlib>
 
-Train::Train() : first(nullptr), countOp(0) {}
+Train::Train() : stepCount(0), headCarriage(nullptr) {}
 
-void Train::addCar(bool light) {
-    Car *newCar = new Car{light, nullptr, nullptr};
-    if (!first) {
-        first = newCar;
-        first->next = first;
-        first->prev = first;
+void Train::addCarriage(bool lightStatus) {
+    Carriage* newCarriage = new Carriage{lightStatus, nullptr, nullptr};
+
+    if (headCarriage == nullptr) {
+        headCarriage = newCarriage;
+        headCarriage->nextCarriage = headCarriage;
+        headCarriage->previousCarriage = headCarriage;
     } else {
-        Car *last = first->prev;
-        last->next = newCar;
-        newCar->prev = last;
-        newCar->next = first;
-        first->prev = newCar;
+        Carriage* lastCarriage = headCarriage->previousCarriage;
+        lastCarriage->nextCarriage = newCarriage;
+        newCarriage->previousCarriage = lastCarriage;
+        newCarriage->nextCarriage = headCarriage;
+        headCarriage->previousCarriage = newCarriage;
     }
 }
 
-int Train::getLength() {
-    if (!first) return 0;
-
-    int length = 0;
-    Car *current = first;
-    do {
-        length++;
-        countOp++;
-        current = current->next;
-    } while (current != first);
-
-    return length;
+int Train::getStepCount() {
+    return stepCount;
 }
 
-int Train::getOpCount() {
-    return countOp;
+int Train::getTotalLength() {
+    stepCount = 0; 
+    Carriage* currentCarriage = headCarriage;
+
+    if (!currentCarriage) return 0; 
+
+    unsigned int totalCarriages = 0; 
+
+    do {
+        if (!currentCarriage->lightStatus) {
+            currentCarriage->lightStatus = true;
+            totalCarriages++;
+        }
+        
+        currentCarriage = currentCarriage->nextCarriage;
+        stepCount += 2;
+
+    } while (currentCarriage != headCarriage); 
+
+    return totalCarriages;
+}
+
+Train::~Train() {
+    if (!headCarriage) return; 
+
+    Carriage* currentCarriage = headCarriage;
+    do {
+        Carriage* nextCarriage = currentCarriage->nextCarriage;
+        delete currentCarriage;
+        currentCarriage = nextCarriage;
+    } while (currentCarriage != headCarriage); 
+
+    headCarriage = nullptr; 
 }
