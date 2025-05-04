@@ -1,59 +1,63 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : stepCount(0), headCarriage(nullptr) {}
+Train::Train() : operationCount(0), head(nullptr) {}
 
-void Train::addCarriage(bool lightStatus) {
-    Carriage* newCarriage = new Carriage{lightStatus, nullptr, nullptr};
-
-    if (headCarriage == nullptr) {
-        headCarriage = newCarriage;
-        headCarriage->nextCarriage = headCarriage;
-        headCarriage->previousCarriage = headCarriage;
-    } else {
-        Carriage* lastCarriage = headCarriage->previousCarriage;
-        lastCarriage->nextCarriage = newCarriage;
-        newCarriage->previousCarriage = lastCarriage;
-        newCarriage->nextCarriage = headCarriage;
-        headCarriage->previousCarriage = newCarriage;
-    }
+void Train::addCarriage(bool light) {
+  Carriage* newCarriage = new Carriage{light, nullptr, nullptr};
+  
+  if (head == nullptr) {
+    head = newCarriage;
+    head->next = head;
+    head->prev = head;
+  } else {
+    Carriage* tail = head->prev;
+    tail->next = newCarriage;
+    newCarriage->prev = tail;
+    newCarriage->next = head;
+    head->prev = newCarriage;
+  }
 }
 
-int Train::getStepCount() {
-    return stepCount;
+int Train::getOperationCount() {
+  return operationCount;
 }
 
 int Train::getTotalLength() {
-    stepCount = 0; 
-    Carriage* currentCarriage = headCarriage;
+  if (head == nullptr) return 0;
+  
+  operationCount = 0;
+  Carriage* current = head;
+  int countCarriages = 0;
 
-    if (!currentCarriage) return 0; 
+  do {
+    if (!current->light) {
+      current->light = true;
+      countCarriages++;
+    }
+    
+    current = current->next;
+    operationCount += 2;
+  } while (current != head);
 
-    unsigned int totalCarriages = 0; 
-
-    do {
-        if (!currentCarriage->lightStatus) {
-            currentCarriage->lightStatus = true;
-            totalCarriages++;
-        }
-        
-        currentCarriage = currentCarriage->nextCarriage;
-        stepCount += 2;
-
-    } while (currentCarriage != headCarriage); 
-
-    return totalCarriages;
+  if (!head->light) {
+    return countCarriages;
+  }
+  
+  return countCarriages;
 }
 
 Train::~Train() {
-    if (!headCarriage) return; 
+  if (head == nullptr) return;
+  
+  Carriage* current = head;
+  Carriage* nextCarriage;
 
-    Carriage* currentCarriage = headCarriage;
-    do {
-        Carriage* nextCarriage = currentCarriage->nextCarriage;
-        delete currentCarriage;
-        currentCarriage = nextCarriage;
-    } while (currentCarriage != headCarriage); 
-
-    headCarriage = nullptr; 
+  do {
+    nextCarriage = current->next;
+    delete current;
+    current = nextCarriage;
+  } while (current != head);
+  
+  head = nullptr;
 }
