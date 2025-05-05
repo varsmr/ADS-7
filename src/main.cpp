@@ -7,9 +7,9 @@ int main() {
   int count = 60; // кол-во вагонов
 
   while (count--)
-    train.addCar(false);
+    train.addCarriage(false);
 
-  std::cout << train.getLength() << std::endl;
-  std::cout << train.getOpCount() << std::endl;
+  std::cout << train.getTotalLength() << std::endl;
+  std::cout << train.getOperationCount() << std::endl;
   return 0;
 }
