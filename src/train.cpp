@@ -33,6 +33,7 @@ int Train::getLength() {
   do {
     carCount++;
     currentCar = currentCar->next;
+    operationCount += 2;
   } while (currentCar != head);
   return carCount;
 }
