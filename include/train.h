@@ -9,8 +9,10 @@ class Train {
     Car *next;
     Car *prev;
 
-    explicit Car(bool isLightOn) : light(isLightOn), next(nullptr), prev(nullptr) {}
-  };
+    explicit Car(bool isLightOn) 
+    : light(isLightOn), 
+      next(nullptr), 
+      prev(nullptr) {}
 
   int operationCount;
   Car *head;
