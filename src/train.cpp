@@ -1,54 +1,94 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
+#include <cstdlib>
 
-Train::Train() : operationCount(0), head(nullptr) {}
+Train::Train() : countOp(0), head(nullptr) {}
 
-void Train::addCar(bool lightStatus) {
-  Car *newCar = new Car(lightStatus);
-  if (!head) {
-    head = newCar;
-    head->next = head;
-    head->prev = head;
-  } else {
-    Car *tail = head->prev;
-    tail->next = newCar;
-    newCar->prev = tail;
-    newCar->next = head;
-    head->prev = newCar;
-  }
+void Train::addCar(bool lightOn) {
+    Car* newCar = new Car{lightOn, nullptr, nullptr};
+
+    if (!head) {
+        head = newCar;
+        newCar->next = newCar;
+        newCar->prev = newCar;
+    } else {
+        Car* lastCar = head->prev;
+        newCar->next = head;
+        newCar->prev = lastCar;
+        lastCar->next = newCar;
+        head->prev = newCar;
+        head = newCar;
+    }
 }
 
 int Train::getLength() {
-  if (!head) return 0;
+    if (!head) return 0;
+    if (head->next == head) return 1;
 
-  head->light = true;
-  Car *current = head->next;
+    countOp = 0;
+    Car* currentCar = head;
+    int size = 1;
 
-  while (true) {
-    int length = 1;
-    operationCount++;
-
-    while (!current->light) {
-      current = current->next;
-      operationCount++;
-      length++;
+    if (!currentCar->light) {
+        currentCar->light = true;
     }
 
-    current->light = false;
+    currentCar = currentCar->next;
+    countOp += 2;
 
-    for (int i = 0; i < length; i++) {
-      current = current->prev;
-      operationCount++;
+    while (!currentCar->light) {
+        currentCar = currentCar->next;
+        countOp += 2;
+        size++;
     }
-    if (!current->light) {
-      return length;
+    currentCar->light = false;
+
+    if (!head->light) {
+        return size;
     }
 
-    current = current->next;
-  }
+    while (true) {
+        currentCar = head;
+        size = 1;
+
+        if (!currentCar->light) {
+            currentCar->light = true;
+        }
+
+        currentCar = currentCar->next;
+        countOp += 2;
+
+        while (!currentCar->light) {
+            currentCar = currentCar->next;
+            countOp += 2;
+            size++;
+        }
+        currentCar->light = false;
+
+        if (!head->light) {
+            return size;
+        }
+    }
 }
-
 int Train::getOpCount() {
-  return operationCount;
+    return countOp;
 }
 
+Train::~Train() {
+    if (!head) return;
+
+    if (head->next == head) {
+        delete head;
+        head = nullptr;
+        return;
+    }
+    Car* currentCar = head->next;
+    while (currentCar != head) {
+        Car* temp = currentCar;
+        currentCar = currentCar->next;
+        delete temp;
+    }
+
+    delete head;
+    head = nullptr;
+}
