@@ -8,18 +8,18 @@ class Train {
     bool light;
     Car *next;
     Car *prev;
-    
-    explicit Car(bool lightState) : light(lightState), next(nullptr), prev(nullptr) {}
+
+    explicit Car(bool isLightOn) : light(isLightOn), next(nullptr), prev(nullptr) {}
   };
-  int countOp;
-  Car *first;
+
+  int operationCount;
+  Car *head;
 
  public:
   Train();
-  ~Train();
-  void addCar(bool light);
+  void addCar(bool lightStatus);
   int getLength();
-  int getOpCount() const;
+  int getOpCount();
 };
 
 #endif  // INCLUDE_TRAIN_H_
