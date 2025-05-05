@@ -3,7 +3,7 @@
 
 Train::Train() : operationCount(0), head(nullptr) {}
 
-void Train::addCarriage(bool light) {
+void Train::addCar(bool light) {
   Carriage* newCarriage = new Carriage{light, nullptr, nullptr};
   
   if (head == nullptr) {
@@ -19,11 +19,11 @@ void Train::addCarriage(bool light) {
   }
 }
 
-int Train::getOperationCount() {
+int Train::getOpCount() {
   return operationCount;
 }
 
-int Train::getTotalLength() {
+int Train::getLength() {
   if (head == nullptr) return 0;
   
   operationCount = 0;
