@@ -1,44 +1,53 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : countOp(0), first(nullptr) {}
+Train::Train() : operationCount(0), head(nullptr) {}
 
-Train::~Train() {}
-
-void Train::addCar(bool light) {
-  Car *newCar = new Car(light);
-  if (!first) {
-    first = newCar;
-    first->next = first;
-    first->prev = first;
+void Train::addCar(bool lightStatus) {
+  Car *newCar = new Car(lightStatus);
+  if (!head) {
+    head = newCar;
+    head->next = head;
+    head->prev = head;
   } else {
-    Car *tail = first->prev;
+    Car *tail = head->prev;
     tail->next = newCar;
     newCar->prev = tail;
-    newCar->next = first;
-    first->prev = newCar;
+    newCar->next = head;
+    head->prev = newCar;
   }
 }
 
 int Train::getLength() {
-  if (!first) return 0;
+  if (!head) return 0;
 
+  head->light = true;
+  Car *current = head->next;
   int length = 0;
-  countOp = 0;
-  Car *current = first;
 
-  do {
-    countOp++;
-    if (current->light) {
-      current->light = false;
+  while (true) {
+    length = 1;
+    operationCount++;
+
+    while (!current->light) {
+      current = current->next;
+      operationCount++;
       length++;
     }
+
+    current->light = false;
+
+    for (int i = 0; i < length; i++) {
+      current = current->prev;
+      operationCount++;
+    }
+    if (!current->light) {
+      return length;
+    }
+
     current = current->next;
-  } while (current != first);
-
-  return length;
+  }
 }
 
-int Train::getOpCount() const { 
-  return countOp; 
-}
+int Train::getOpCount() { return operationCount; }
+
