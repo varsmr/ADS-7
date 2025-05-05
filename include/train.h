@@ -4,23 +4,21 @@
 
 class Train {
  private:
-  struct Carriage {
-    bool light;
-    Carriage *next;
-    Carriage *prev;
+  struct Car {
+    bool hasLight;
+    Car *next;
+    Car *prev;
   };
   
   int operationCount;
-  Carriage *head;
+  Car *head;
 
  public:
   Train();
-  void addCar(bool light);
-  int getOpCount();
+  void addCar(bool hasLight);
   int getLength();
-
+  int getOpCount();
   ~Train();
 };
 
 #endif  // INCLUDE_TRAIN_H_
-
