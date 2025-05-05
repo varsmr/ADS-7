@@ -1,53 +1,52 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
+Train::Train(): countOp(0), first(nullptr) {}
 
-Train::Train() : operationCount(0), head(nullptr) {}
-
-void Train::addCar(bool hasLight) {
-  Car* newCar = new Car{hasLight, nullptr, nullptr};
-  operationCount++;
-  if (head == nullptr) {
-    head = newCar;
-    head->next = head;
-    head->prev = head;
-    return;
+void Train::addCar(bool light) {
+  Car *temp = new Car;
+  temp->light = light;
+  temp->prev = nullptr;
+  temp->next = nullptr;
+  if (first == nullptr) {
+    first = temp;
+  } else if (first->next == nullptr) {
+    first->next = temp;
+    temp->prev = first;
+    first->prev = temp;
+    temp->next = first;
+  } else {
+    first->prev->next = temp;
+    temp->prev = first->prev;
+    first->prev = temp;
+    temp->next = first;
   }
-
-  Car* lastCar = head->prev;
-  lastCar->next = newCar;
-  newCar->prev = lastCar;
-  newCar->next = head;
-  head->prev = newCar;
+}
+int Train::getLength() {
+  int count = 0;
+  int i;
+  countOp = 0;
+  first->light = true;
+  Cage* temp = first;
+  while (true) {
+    countOp++;
+    count++;
+    temp = temp->next;
+    if (temp->light) {
+      temp->light = false;
+      i = count;
+      for (i; i > 0; i--) {
+        temp = temp->prev;
+        countOp++;
+      }
+      if (!temp->light) {
+        return count;
+      }
+      count = i;
+    }
+  }
+  return i;
 }
 
 int Train::getOpCount() {
-  return operationCount;
-}
-
-int Train::getLength() {
-  if (head == nullptr) return 0;
-
-  int carCount = 0;
-  const Car* currentCar = head;
-
-  do {
-    carCount++;
-    currentCar = currentCar->next;
-    operationCount ++;
-  } while (currentCar != head);
-  return carCount;
-}
-
-Train::~Train() {
-  if (head == nullptr) return;
-  Car* currentCar = head;
-  Car* nextCar;
-  do {
-    nextCar = currentCar->next;
-    delete currentCar;
-    currentCar = nextCar;
-    operationCount ++;
-  } while (currentCar != head);
-
-  head = nullptr;
+  return countOp;
 }
