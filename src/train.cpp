@@ -26,24 +26,19 @@ int Train::getOpCount() {
 int Train::getLength() {
   if (head == nullptr) return 0;
   
-  operationCount = 0;
-  Carriage* current = head;
+  int Train::getLength() {
+  if (head == nullptr) return 0;
+
   int countCarriages = 0;
+  Carriage* current = head;
 
   do {
     if (!current->light) {
-      current->light = true;
       countCarriages++;
     }
-    
     current = current->next;
-    operationCount += 2;
+    operationCount++;
   } while (current != head);
-
-  if (!head->light) {
-    return countCarriages;
-  }
-  
   return countCarriages;
 }
 
