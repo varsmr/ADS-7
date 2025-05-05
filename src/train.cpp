@@ -26,16 +26,11 @@ int Train::getOpCount() {
 
 int Train::getLength() {
   if (head == nullptr) return 0;
-
-  operationCount = 0;
   int carCount = 0;
   Car* currentCar = head;
 
   do {
-    if (!currentCar->hasLight) {
-      carCount++;
-      currentCar->hasLight = true;
-    }
+    carCount++;
     currentCar = currentCar->next;
     operationCount += 2;
   } while (currentCar != head);
