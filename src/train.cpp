@@ -5,7 +5,7 @@ Train::Train() : operationCount(0), head(nullptr) {}
 
 void Train::addCar(bool hasLight) {
   Car* newCar = new Car{hasLight, nullptr, nullptr};
-
+  operationCount++;
   if (head == nullptr) {
     head = newCar;
     head->next = head;
@@ -33,7 +33,6 @@ int Train::getLength() {
   do {
     carCount++;
     currentCar = currentCar->next;
-    operationCount ++;
   } while (currentCar != head);
   return carCount;
 }
