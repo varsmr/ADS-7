@@ -26,24 +26,22 @@ int Train::getOpCount() {
 
 int Train::getLength() {
   if (head == nullptr) return 0;
+
   int carCount = 0;
-  Car* currentCar = head;
+  const Car* currentCar = head;
 
   do {
     carCount++;
     currentCar = currentCar->next;
     operationCount += 2;
   } while (currentCar != head);
-
   return carCount;
 }
 
 Train::~Train() {
   if (head == nullptr) return;
-
   Car* currentCar = head;
   Car* nextCar;
-
   do {
     nextCar = currentCar->next;
     delete currentCar;
