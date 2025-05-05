@@ -49,5 +49,7 @@ int Train::getLength() {
   }
 }
 
-int Train::getOpCount() { return operationCount; }
+int Train::getOpCount() {
+  return operationCount;
+}
 
